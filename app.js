@@ -19,48 +19,50 @@ const fs = require('fs-extra');
 
         for (let i = 0; i < sections.length; i++) {
 
-            await page.goto(sections[i]);
+            await page.goto(sections[i], {waitUntil: 'networkidle2'});
 
             // await page.screenshot({path: 'example.png'});
+            let ids = await page.evaluate(() => {
+                const items = document.querySelectorAll('#resultListItems > li.result-list__listing');
+                debugger;
+                console.log(items.length);
+                let ids = [];
 
-            await page.waitForSelector('#resultListItems');
-
-            const items = await page.$$('#resultListItems > li');
-
-            console.log(items.length);
-            // console.log(items[0]);
-            // let ids = [];
-
-            for (const item of items) {
-                var ids = await item.$eval('li', (li) => {
-                    return li.dataset.id;
-                });
+                for (const item of items)
+                    ids.push(item.dataset.id);
 
                 // ids.push(item.dataset.id);
 
-                console.log('ids', ids);
+                return ids;
+            });
+
+            console.log('ids', ids);
+
+            for (const id of ids) {
+
+                await page.goto(`https://www.immobilienscout24.de/expose/${id}#/`);
+
+                let result = await page.evaluate(() => {
+
+                    const mainCriterias = document.querySelectorAll('.mainCriteria');
+
+                    return {
+                        price: mainCriterias[0].querySelector('.is24qa-kaltmiete.is24-value').textContent,
+                        rooms: mainCriterias[1].querySelector('.is24qa-zi.is24-value').textContent,
+                        space: mainCriterias[2].querySelector('.is24qa-flaeche.is24-value').textContent
+                    };
+                });
+
+                console.log(result);
+                await fs.appendFile('data.csv', `${result.price};${result.rooms};${result.space}\n`);
             }
-
-            // for (let id of ids) {
-
-            //     await page.goto(`https://www.immobilienscout24.de/expose/${id}#/`);
-
-                // let price = await item.$eval('.price span', (span) => {
-                //     return span.innerText.trim();
-                // });
-
-                // price = price.replace(/ü/g, 'ue');
-                // price = price.replace(/–/g, '-');
-                // price = price.trim();
-
-            //     await fs.appendFile('data.csv', `${id};\n`);
-            // }
         }
 
         console.log('done');
+
         await browser.close();
     }
     catch (e) {
-        console.log(e);
+        console.error(e);
     }
 })();
