@@ -27,7 +27,7 @@ const app = {
     getIds: async () => {
         return await app.page.evaluate(() => {
             const items = document.querySelectorAll('#resultListItems > li.result-list__listing');
-            debugger;
+
             console.log(items.length);
             let ids = [];
 
