@@ -7,6 +7,7 @@ const pup = require('puppeteer');
     try {
         const browser = await pup.launch({headless: true});
         await app.init(browser);
+        await app.connect();
         await app.run();
         await browser.close();
     }

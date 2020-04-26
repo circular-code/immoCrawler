@@ -15,14 +15,13 @@ con.connect((err) => {
   }
   console.log('Connection established');
 
-// create
-//   const testInsert = { id: 114105248, rooms: 3, coldRent: 700.54, space: 70, zip: 78549, features: 'Balkon|Einbauküche', type: 'Maisonette' };
-//   con.query('INSERT INTO details SET ?', testInsert, (err, res) => {
-//     if(err) throw err;
+//create
+  // const testInsert = { id: 114105248, rooms: 3, coldRent: 700.54, space: 70, zip: 78549, features: 'Balkon|Einbauküche', type: 'Maisonette' };
+  // con.query('INSERT INTO details SET ?', testInsert, (err, res) => {
+  //   if(err) throw err;
   
-//     console.log('Last insert ID:', res.insertId);
-//   });
-
+  //   console.log('Last insert ID:', res.insertId);
+  // });
 
 // update
 // con.query(
